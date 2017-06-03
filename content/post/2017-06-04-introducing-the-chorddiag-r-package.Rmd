@@ -1,0 +1,138 @@
+---
+title: Introducing the chorddiag R package
+author: Matt Flor
+date: '2017-06-04'
+slug: introducing-the-chorddiag-r-package
+categories:
+  - R
+tags:
+  - Visualization
+  - R package
+  - D3
+subtitle: ''
+draft: true
+description: 'The chorddiag package allows to create interactive chord diagrams using the JavaScript visualization library D3 from within R via the htmlwidgets interfacing framework.'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# Introduction
+
+The `chorddiag` package allows to create interactive chord diagrams using the JavaScript visualization library [D3](http://d3js.org) from within R via the `htmlwidgets` interfacing framework.
+
+In short, chord diagrams show directed relationships among a group of entities.
+The chord diagram layout is explained by Mike Bostock, the creator of D3, like this:
+
+> "Consider a hypothetical population of people with different hair colors: black, blonde, brown and red. Each person in this population has a preferred hair color for a dating partner; of the 29,630 (hypothetical) people with black hair, 40% (11,975) prefer partners with the same hair color. This preference is asymmetric: for example, only 10% of people with blonde hair prefer black hair, while 20% of people with black hair prefer blonde hair. A chord diagram visualizes these relationships by drawing quadratic Bézier curves between arcs. The source and target arcs represents two mirrored subsets of the total population, such as the number of people with black hair that prefer blonde hair, and the number of people with blonde hair that prefer black hair."
+([Mike Bostock](https://github.com/mbostock/d3/wiki/Chord-Layout))
+
+The package's JavaScript code is based on the example [bl.ock](http://bl.ocks.org/mbostock/4062006), with modifications for fading behaviour and addition of tooltips.
+
+
+# Installation
+
+The package is available from github and can be installed with
+
+```{r installation, eval = FALSE}
+devtools::install_github("mattflor/chorddiag")
+```
+
+(you obviously need the `devtools` package for this).
+
+After installation, the package is loaded via
+
+```{r loading}
+library(chorddiag)
+```
+
+
+# Examples
+
+## Hair Color Preference
+
+To create a chord diagram for the hair color preference example stated in the introduction, we need the preferences in matrix format:
+
+```{r}
+m <- matrix(c(11975,  5871, 8916, 2868,
+              1951, 10048, 2060, 6171,
+              8010, 16145, 8090, 8045,
+              1013,   990,  940, 6907),
+            byrow = TRUE,
+            nrow = 4, ncol = 4)
+haircolors <- c("black", "blonde", "brown", "red")
+dimnames(m) <- list(have = haircolors,
+                    prefer = haircolors)
+print(m)
+```
+
+Then, we can pass this matrix to the `chorddiag` function to create the chord diagram (see Figure \@ref(fig:basic)).
+
+```{r basic, fig.cap="Default chord diagram for the hair color preference dataset. Explore the plot's interactivity by hovering your mouse over the image."}
+chorddiag(m)
+```
+
+The chord diagram can be customized easily.
+Figure \@ref(fig:customization) shows the result of a function call with custom colors and some added padding to avoid group names overlapping with tick labels:
+
+```{r customization, fig.cap="Customized chord diagram for the hair color preference dataset, using custom colors and more padding between the diagram and group labels to avoid overlap with tick labels."}
+groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
+chorddiag(
+    m, 
+    groupColors = groupColors, 
+    groupnamePadding = 50
+)
+```
+
+*Interactive* chord diagram refers to chord fading and tooltip popups on certain mouse over events.
+E.g. if the mouse pointer hovers over the chord connecting the "blonde" and "red" groups, a tooltip is displayed giving the numbers for the chord, and all other chords fade away.
+Or, when hovering over a group arc, all chords *not * belonging to that group fade away, and a tooltip displays summarized group information.
+Fading levels can be set, and tooltip layout can be customized to some degree as well. 
+For more details and a complete list of options, see the `chorddiag` function's documentation:
+
+```r
+?chorddiag::chorddiag
+```
+
+## Titanic Survival (Bipartite Chord Diagram)
+
+The default chord diagram type is **directional**, allowing for visualization of asymmetric relationships.
+But chord diagrams can also be a useful visualization of frequency distributions for two categories of groups, in other word contingency tables (or cross tabulations or crosstabs).
+In this package, this type of chord diagram is called **bipartite** (because there are only chords *between* categories but not *within* categories).
+
+Here is an example for the `Titanic` dataset.
+First, we create a contingency table of how many passengers from the different classes and from the crew survived or died when the Titanic sunk.
+
+```{r, warning = FALSE, message = FALSE}
+library(dplyr)
+titanic_tbl <- dplyr::tbl_df(Titanic)
+titanic_tbl <- titanic_tbl %>%
+    mutate_each(funs(factor), Class:Survived)
+by_class_survival <- titanic_tbl %>%
+    group_by(Class, Survived) %>%
+    summarize(Count = sum(n))
+titanic.mat <- matrix(by_class_survival$Count, 
+                      nrow = 4, ncol = 2)
+dimnames(titanic.mat ) <- list(
+    Class = levels(titanic_tbl$Class),
+    Survival = levels(titanic_tbl$Survived)
+)
+print(titanic.mat)
+```
+
+Note that we labeled the dimensions of the matrix by assigning a named list to `dimnames`.
+The dimension labels (here: "Class" and "Survival") will automatically be used in the chord diagram.
+
+We can create a "bipartite" chord diagram for this matrix by setting `type = "bipartite"`.
+
+```{r titanic, fig.cap="A bipartite chord diagram visualizing survival grouped by class / crew for the `Titanic` data."}
+groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", 
+                 "#bababa", "#d7191c", "#1a9641")
+chorddiag(
+    titanic.mat, 
+    type = "bipartite", 
+    groupColors = groupColors,
+    tickInterval = 50
+)
+```

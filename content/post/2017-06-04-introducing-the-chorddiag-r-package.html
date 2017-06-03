@@ -1,0 +1,131 @@
+---
+title: Introducing the chorddiag R package
+author: Matt Flor
+date: '2017-06-04'
+slug: introducing-the-chorddiag-r-package
+categories:
+  - R
+tags:
+  - Visualization
+  - R package
+  - D3
+subtitle: ''
+draft: true
+description: 'The chorddiag package allows to create interactive chord diagrams using the JavaScript visualization library D3 from within R via the htmlwidgets interfacing framework.'
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/rmarkdown-libs/d3-tip/index.js"></script>
+<link href="/rmarkdown-libs/chorddiag/chorddiag.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/chorddiag/chorddiag.js"></script>
+<script src="/rmarkdown-libs/chorddiag-binding/chorddiag.js"></script>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The <code>chorddiag</code> package allows to create interactive chord diagrams using the JavaScript visualization library <a href="http://d3js.org">D3</a> from within R via the <code>htmlwidgets</code> interfacing framework.</p>
+<p>In short, chord diagrams show directed relationships among a group of entities. The chord diagram layout is explained by Mike Bostock, the creator of D3, like this:</p>
+<blockquote>
+<p>“Consider a hypothetical population of people with different hair colors: black, blonde, brown and red. Each person in this population has a preferred hair color for a dating partner; of the 29,630 (hypothetical) people with black hair, 40% (11,975) prefer partners with the same hair color. This preference is asymmetric: for example, only 10% of people with blonde hair prefer black hair, while 20% of people with black hair prefer blonde hair. A chord diagram visualizes these relationships by drawing quadratic Bézier curves between arcs. The source and target arcs represents two mirrored subsets of the total population, such as the number of people with black hair that prefer blonde hair, and the number of people with blonde hair that prefer black hair.” (<a href="https://github.com/mbostock/d3/wiki/Chord-Layout">Mike Bostock</a>)</p>
+</blockquote>
+<p>The package’s JavaScript code is based on the example <a href="http://bl.ocks.org/mbostock/4062006">bl.ock</a>, with modifications for fading behaviour and addition of tooltips.</p>
+</div>
+<div id="installation" class="section level1">
+<h1>Installation</h1>
+<p>The package is available from github and can be installed with</p>
+<pre class="r"><code>devtools::install_github(&quot;mattflor/chorddiag&quot;)</code></pre>
+<p>(you obviously need the <code>devtools</code> package for this).</p>
+<p>After installation, the package is loaded via</p>
+<pre class="r"><code>library(chorddiag)</code></pre>
+</div>
+<div id="examples" class="section level1">
+<h1>Examples</h1>
+<div id="hair-color-preference" class="section level2">
+<h2>Hair Color Preference</h2>
+<p>To create a chord diagram for the hair color preference example stated in the introduction, we need the preferences in matrix format:</p>
+<pre class="r"><code>m &lt;- matrix(c(11975,  5871, 8916, 2868,
+              1951, 10048, 2060, 6171,
+              8010, 16145, 8090, 8045,
+              1013,   990,  940, 6907),
+            byrow = TRUE,
+            nrow = 4, ncol = 4)
+haircolors &lt;- c(&quot;black&quot;, &quot;blonde&quot;, &quot;brown&quot;, &quot;red&quot;)
+dimnames(m) &lt;- list(have = haircolors,
+                    prefer = haircolors)
+print(m)
+##         prefer
+## have     black blonde brown  red
+##   black  11975   5871  8916 2868
+##   blonde  1951  10048  2060 6171
+##   brown   8010  16145  8090 8045
+##   red     1013    990   940 6907</code></pre>
+<p>Then, we can pass this matrix to the <code>chorddiag</code> function to create the chord diagram (see Figure <a href="#fig:basic">1</a>).</p>
+<pre class="r"><code>chorddiag(m)</code></pre>
+<div class="figure"><span id="fig:basic"></span>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="chorddiag html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"matrix":[[11975,5871,8916,2868],[1951,10048,2060,6171],[8010,16145,8090,8045],[1013,990,940,6907]],"options":{"type":"directional","width":null,"height":null,"margin":100,"showGroupnames":true,"groupNames":["black","blonde","brown","red"],"groupColors":["#1B9E77","#D95F02","#7570B3","#E7298A"],"groupThickness":0.1,"groupPadding":0.0349065850398866,"groupnamePadding":[30,30,30,30],"groupnameFontsize":18,"groupedgeColor":null,"chordedgeColor":"#808080","categoryNames":null,"categorynamePadding":100,"categorynameFontsize":28,"showTicks":true,"tickInterval":1000,"ticklabelFontsize":10,"fadeLevel":0.1,"showTooltips":true,"showZeroTooltips":true,"tooltipNames":["black","blonde","brown","red"],"tooltipFontsize":12,"tooltipUnit":"","tooltipGroupConnector":" &#x25B6; ","precision":"null","clickAction":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 1: Default chord diagram for the hair color preference dataset. Explore the plot’s interactivity by hovering your mouse over the image.
+</p>
+</div>
+<p>The chord diagram can be customized easily. Figure <a href="#fig:customization">2</a> shows the result of a function call with custom colors and some added padding to avoid group names overlapping with tick labels:</p>
+<pre class="r"><code>groupColors &lt;- c(&quot;#000000&quot;, &quot;#FFDD89&quot;, &quot;#957244&quot;, &quot;#F26223&quot;)
+chorddiag(
+    m, 
+    groupColors = groupColors, 
+    groupnamePadding = 50
+)</code></pre>
+<div class="figure"><span id="fig:customization"></span>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="chorddiag html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"matrix":[[11975,5871,8916,2868],[1951,10048,2060,6171],[8010,16145,8090,8045],[1013,990,940,6907]],"options":{"type":"directional","width":null,"height":null,"margin":100,"showGroupnames":true,"groupNames":["black","blonde","brown","red"],"groupColors":["#000000","#FFDD89","#957244","#F26223"],"groupThickness":0.1,"groupPadding":0.0349065850398866,"groupnamePadding":[50,50,50,50],"groupnameFontsize":18,"groupedgeColor":null,"chordedgeColor":"#808080","categoryNames":null,"categorynamePadding":100,"categorynameFontsize":28,"showTicks":true,"tickInterval":1000,"ticklabelFontsize":10,"fadeLevel":0.1,"showTooltips":true,"showZeroTooltips":true,"tooltipNames":["black","blonde","brown","red"],"tooltipFontsize":12,"tooltipUnit":"","tooltipGroupConnector":" &#x25B6; ","precision":"null","clickAction":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 2: Customized chord diagram for the hair color preference dataset, using custom colors and more padding between the diagram and group labels to avoid overlap with tick labels.
+</p>
+</div>
+<p><em>Interactive</em> chord diagram refers to chord fading and tooltip popups on certain mouse over events. E.g. if the mouse pointer hovers over the chord connecting the “blonde” and “red” groups, a tooltip is displayed giving the numbers for the chord, and all other chords fade away. Or, when hovering over a group arc, all chords <em>not </em> belonging to that group fade away, and a tooltip displays summarized group information. Fading levels can be set, and tooltip layout can be customized to some degree as well. For more details and a complete list of options, see the <code>chorddiag</code> function’s documentation:</p>
+<pre class="r"><code>?chorddiag::chorddiag</code></pre>
+</div>
+<div id="titanic-survival-bipartite-chord-diagram" class="section level2">
+<h2>Titanic Survival (Bipartite Chord Diagram)</h2>
+<p>The default chord diagram type is <strong>directional</strong>, allowing for visualization of asymmetric relationships. But chord diagrams can also be a useful visualization of frequency distributions for two categories of groups, in other word contingency tables (or cross tabulations or crosstabs). In this package, this type of chord diagram is called <strong>bipartite</strong> (because there are only chords <em>between</em> categories but not <em>within</em> categories).</p>
+<p>Here is an example for the <code>Titanic</code> dataset. First, we create a contingency table of how many passengers from the different classes and from the crew survived or died when the Titanic sunk.</p>
+<pre class="r"><code>library(dplyr)
+titanic_tbl &lt;- dplyr::tbl_df(Titanic)
+titanic_tbl &lt;- titanic_tbl %&gt;%
+    mutate_each(funs(factor), Class:Survived)
+by_class_survival &lt;- titanic_tbl %&gt;%
+    group_by(Class, Survived) %&gt;%
+    summarize(Count = sum(n))
+titanic.mat &lt;- matrix(by_class_survival$Count, 
+                      nrow = 4, ncol = 2)
+dimnames(titanic.mat ) &lt;- list(
+    Class = levels(titanic_tbl$Class),
+    Survival = levels(titanic_tbl$Survived)
+)
+print(titanic.mat)
+##       Survival
+## Class   No Yes
+##   1st  122 528
+##   2nd  203 178
+##   3rd  167 673
+##   Crew 118 212</code></pre>
+<p>Note that we labeled the dimensions of the matrix by assigning a named list to <code>dimnames</code>. The dimension labels (here: “Class” and “Survival”) will automatically be used in the chord diagram.</p>
+<p>We can create a “bipartite” chord diagram for this matrix by setting <code>type = &quot;bipartite&quot;</code>.</p>
+<pre class="r"><code>groupColors &lt;- c(&quot;#2171b5&quot;, &quot;#6baed6&quot;, &quot;#bdd7e7&quot;, 
+                 &quot;#bababa&quot;, &quot;#d7191c&quot;, &quot;#1a9641&quot;)
+chorddiag(
+    titanic.mat, 
+    type = &quot;bipartite&quot;, 
+    groupColors = groupColors,
+    tickInterval = 50
+)</code></pre>
+<div class="figure"><span id="fig:titanic"></span>
+<div id="htmlwidget-3" style="width:672px;height:480px;" class="chorddiag html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"matrix":[[0,0,0,0,122,528],[0,0,0,0,203,178],[0,0,0,0,167,673],[0,0,0,0,118,212],[122,203,167,118,0,0],[528,178,673,212,0,0]],"options":{"type":"bipartite","width":null,"height":null,"margin":100,"showGroupnames":true,"groupNames":["1st","2nd","3rd","Crew","No","Yes"],"groupColors":["#2171b5","#6baed6","#bdd7e7","#bababa","#d7191c","#1a9641"],"groupThickness":0.1,"groupPadding":0.0349065850398866,"groupnamePadding":[30,30,30,30,30,30],"groupnameFontsize":18,"groupedgeColor":null,"chordedgeColor":"#808080","categoryNames":["Class","Survival"],"categorynamePadding":100,"categorynameFontsize":28,"showTicks":true,"tickInterval":50,"ticklabelFontsize":10,"fadeLevel":0.1,"showTooltips":true,"showZeroTooltips":true,"tooltipNames":["1st","2nd","3rd","Crew","No","Yes"],"tooltipFontsize":12,"tooltipUnit":"","tooltipGroupConnector":" &#x25B6; ","precision":"null","clickAction":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 3: A bipartite chord diagram visualizing survival grouped by class / crew for the <code>Titanic</code> data.
+</p>
+</div>
+</div>
+</div>
