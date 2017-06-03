@@ -1,0 +1,56 @@
+---
+title: Hello R World
+author: Matt Flor
+date: '2017-06-03'
+slug: hello-r-world
+categories:
+  - R
+tags:
+  - R Markdown
+  - Hugo
+  - blogdown
+subtitle: ""
+description: "This post is just a shoutout to the R world and to test whether everything works as expected. However, there's a great pie chart in there."
+---
+
+_This post is just a shoutout to the R world and to test whether everything works as expected.
+That said, it basically is a shameless copy from the example website included with the excellent [blogdown](https://github.com/rstudio/blogdown) package that I am using to set up this blog.
+Also, I love the pie chart below in Fig. \@ref(fig:pie)._
+
+_The blog's theme is [Beautiful Hugo](https://github.com/halogenica/beautifulhugo.git) which is a port of [Dean Attali](http://deanattali.com)'s [Beautiful Jekyll](http://deanattali.com/beautiful-jekyll/) theme._
+
+_So, here goes..._
+    
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+fit <- lm(dist ~ speed, data = cars)
+fit
+```
+
+# Including Plots
+
+You can also embed plots. See Figure \@ref(fig:pie) for example:
+
+```{r pie, fig.cap='A fancy pie chart.', tidy=FALSE}
+par(mar = c(0, 1, 0, 1))
+pie(
+  c(280, 60, 20),
+  c('Sky', 'Sunny side of pyramid', 'Shady side of pyramid'),
+  col = c('#2196F3', '#F7EA39', '#C4B632'),
+  init.angle = -50, border = NA
+)
+```
+
+# Math
+
+$S_n = \sum_{i=1}^n X_i$
