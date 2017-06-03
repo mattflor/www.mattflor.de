@@ -1,0 +1,9 @@
+#!/bin/sh
+
+USER=root
+HOST=www.mattflor.de
+DIR=var/www/html/
+
+rsync -avz --delete public/ ${USER}@${HOST}:/${DIR}
+
+exit 0
