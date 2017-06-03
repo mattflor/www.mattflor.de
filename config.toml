@@ -6,8 +6,12 @@ theme = "beautifulhugo"
 metaDataFormat = "yaml"
 pygmentsUseClasses = true
 pygmentCodeFences = true
-disqusShortname = "mattflor"
-#googleAnalytics = "XXX"
+disqusShortname = "www-mattflor-de"
+googleAnalytics = "UA-99133199-1"
+ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
+
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
 
 [Params]
   #subtitle = ""
