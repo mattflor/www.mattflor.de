@@ -1,16 +1,15 @@
 ---
 title: About me
-subtitle: Why you'd want to go on a date with me
 comments: false
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+My name Matt(hias) Flor.
+I am interested in data science, visualization, reproducibility, and the like.
+A few years ago, I stumbled upon (or should I say, I *was* stumbled upon?) the statistical programming language [R](https://cran.r-project.org/).
+Coming from Python, it took a short while but [I learned to stop worrying and love](http://www.imdb.com/title/tt0057012/) R.
+So this blog is mainly a place to keep track of the tricks I continue to learn.
+For future reference for myself mostly.
 
-- I rock a great mustache
-- I'm extremely loyal to my family
-
-What else do you need?
-
-### my history
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](http://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+My original background is in Theoretical Biology.
+Mathematical modelling of evolutionary processes, to be a bit more specific.
+I did my PhD on researching how [these little critters](https://en.wikipedia.org/wiki/Wolbachia) may affect speciation in their insect hosts.
