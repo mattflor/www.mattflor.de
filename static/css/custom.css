@@ -1,7 +1,6 @@
-/* --- General --- */
+/* --- Color customizations --- */
 
 p a {
-  /* text-decoration: underline */
   color: #2196F3;
 }
 a {
@@ -11,31 +10,25 @@ a:hover,
 a:focus {
   color: #0a6fc2;
 }
-
-
 ::-moz-selection {
   background: #2196F3;
 }
 ::selection {
   background: #2196F3;
 }
-
 .navbar-custom .navbar-brand:hover,
 .navbar-custom .navbar-brand:focus ,
 .navbar-custom .nav li a:hover,
 .navbar-custom .nav li a:focus {
   color: #2196F3;
 }
-
 .post-preview a:focus,
 .post-preview a:hover {
   color: #2196F3;
 }
-
 .blog-tags a {
   color: #2196F3;
 }
-
 .blog-tags a:hover {
   color: #2196F3;
 }
