@@ -1,0 +1,9 @@
+# Rstudio defaults
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# blogdown recommendations
+blogdown
+public
