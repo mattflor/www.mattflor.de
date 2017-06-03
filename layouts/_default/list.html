@@ -24,7 +24,7 @@
           </div>
         {{ end }}
         <div class="posts-list">
-          {{ range .Paginator.Pages }}
+          {{ range where .Paginator.Pages "Type" "eq" "post"}}  <!-- https://discuss.gohugo.io/t/exclude-post-type/5194/2 -->
             <article class="post-preview">
               <a href="{{ .Permalink }}">
                 <h2 class="post-title">{{ .Title }}</h2>
@@ -43,6 +43,7 @@
                 <!-- https://github.com/rstudio/blogdown/issues/21#issuecomment-285747870 -->
                 {{ if .Description }}
                   {{ .Description }}
+                  <a href="{{ .Permalink }}" class="post-read-more">[{{ i18n "readMore" }}]</a>
                 {{ else }}
                   {{ if .Truncated }}
                     {{ .Summary }}
