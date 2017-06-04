@@ -10,7 +10,7 @@ tags:
   - Hugo
   - blogdown
 subtitle: ""
-description: "This post is just a shoutout to the R world and to test whether everything works as expected. However, there's a great pie chart to be discovered."
+description: "This post is just a shoutout to the R world and to test whether everything <strike>works</strike> is working as expected. Not much to see her. <i>But</i> &mdash;as a goody&mdash; there's a great pie chart to be discovered."
 ---
 
 _This post is just a shoutout to the R world and to test whether everything works as expected.
