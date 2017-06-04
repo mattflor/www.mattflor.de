@@ -39,3 +39,8 @@ a:focus {
   border: 1px solid #0A6FC2;
 }
 
+/* Nicer code font? */
+code, kbd, pre, samp {
+    font-family: Consolas, monospace, "Courier New";
+}
+
