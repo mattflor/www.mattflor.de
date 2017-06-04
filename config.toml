@@ -8,7 +8,6 @@ metaDataFormat = "yaml"
 #pygmentCodeFences = true
 disqusShortname = "www-mattflor-de"
 googleAnalytics = "UA-100486019-1"
-enableGitInfo = true
 enableRobotsTXT = true
 
 ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
@@ -21,7 +20,7 @@ ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
     logo = "img/logo.png"
     favicon = "img/favicon.ico"
     dateFormat = "January 2, 2006"
-    commit = true
+    #commit = "https://github.com/mattflor/www.mattflor.de/tree/"
     rss = true
     comments = true
     gcse = "001109883246625728971:bhm8k26cb2e" # Get your code from google.com/cse. Make sure to go to "Look and Feel" and change Layout to "Full Width" and Theme to "Classic"
