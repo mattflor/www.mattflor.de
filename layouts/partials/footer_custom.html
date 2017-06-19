@@ -5,3 +5,16 @@ Or you can delete these file if you don't need it.
 <!-- for example, you could include some js libraries:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js" integrity="sha256-HdIuWBZj4eftihsoDCJoMYjZi6aNVaw7YlUpzKT3ZxI=" crossorigin="anonymous"></script>
 -->
+
+<!-- Add mathjax support as in 
+https://github.com/yihui/hugo-lithium-theme/blob/7d436d803df90c873cdaecf24aeeff827696d77c/layouts/partials/footer.html#L21-L30 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    });
+</script>
+<script type="text/javascript"
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
