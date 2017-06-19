@@ -1,0 +1,106 @@
+---
+title: June 19th Guardian Pie Puzzle
+author: Matt Flor
+date: '2017-06-19'
+slug: june-19th-guardian-pie-puzzle
+categories:
+  - R
+tags: 
+  - puzzle
+subtitle: ''
+description: 'Analytical and programmatical solutions for one of the Alex Bello Monday puzzles in the Guardian: "A huge pie is divided among 100 guests. The first guest gets 1% of the pie. The second guest gets 2% of the remaining part. The third guest gets 3% of the rest, etc. The last guest gets 100% of the last part. Who gets the biggest piece?"'
+---
+
+
+
+<p>Here is my take<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> on the <a href="https://www.theguardian.com/science/2017/jun/19/can-you-solve-it-pythagorass-best-puzzles">June 19th <em>Huge Pie</em> puzzle in the Guardian</a>:</p>
+<blockquote>
+<p>A huge pie is divided among 100 guests. The first guest gets 1% of the pie. The second guest gets 2% of the remaining part. The third guest gets 3% of the rest, etc. The last guest gets 100% of the last part. Who gets the biggest piece?&quot;</p>
+</blockquote>
+<p>Tables are always good to get a quick overview of what we’ve got, the tricky part being the rest of the pie:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Guest</th>
+<th align="left">Percentage</th>
+<th align="left">Rest of pie (before guest is served)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><span class="math inline">\(\frac{1}{100}\)</span></td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left"><span class="math inline">\(\frac{2}{100}\)</span></td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\cdot\left(1 - \frac{1}{100}\right) = \frac{100}{100}\cdot\frac{99}{100}\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left"><span class="math inline">\(\frac{3}{100}\)</span></td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\cdot\left(1 - \frac{1}{100}\right)\cdot\left(1 - \frac{2}{100}\right) = \frac{100}{100}\cdot\frac{99}{100}\cdot\frac{98}{100}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+<td align="left"><span class="math inline">\(\vdots\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">99</td>
+<td align="left"><span class="math inline">\(\frac{99}{100}\)</span></td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\cdot\frac{99}{100}\cdot\ \cdots\ \cdot\frac{2}{100}\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">100</td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\)</span></td>
+<td align="left"><span class="math inline">\(\frac{100}{100}\cdot\frac{99}{100}\cdot\ \cdots\ \cdot\frac{1}{100}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>If we number the guests <span class="math inline">\(i = 1...100\)</span> then each one of them gets a percentage <span class="math inline">\(p_i = \frac{i}{100}\)</span> of the rest of the pie at the time she is being served, and we can write this rest as <span class="math inline">\(r_i = \prod_{j=0}^{i-1} \frac{100 - j}{100}\)</span>. The actual size of the piece of pie that guest <span class="math inline">\(i\)</span> gets is <span class="math display">\[s_i = p_i\cdot r_i = \frac{i}{100}\cdot\prod_{j=0}^{i-1} \frac{100 - j}{100}.\]</span> Of course, for the very next guest <span class="math inline">\(i + 1\)</span> we have <span class="math display">\[s_{i+1} = p_{i+1}\cdot r_{i+1} = \frac{i+1}{100}\cdot\prod_{j=0}^{i} \frac{100 - j}{100}.\]</span> The difference in their pieces’ sizes is</p>
+<p><span class="math display">\[\begin{align}\label{eq:diff}
+s_{i+1} - s_i  &amp;= \frac{i+1}{100}\cdot\prod_{j=0}^{i} \frac{100 - j}{100} - \frac{i}{100}\cdot\prod_{j=0}^{i-1} \frac{100 - j}{100} \\
+         &amp;= \frac{i+1}{100}\cdot\frac{100 - i}{100}\cdot\prod_{j=0}^{i-1} \frac{100 - j}{100} - \frac{i}{100}\cdot\prod_{j=0}^{i-1} \frac{100 - j}{100} \\
+         &amp;= \left(\frac{i+1}{100}\cdot\frac{100 - i}{100} - \frac{i}{100}\right)\prod_{j=0}^{i-1} \frac{100 - j}{100}
+\end{align}\]</span></p>
+<p>For the first few guests, sizes are increasing (you can check this easily from the table above) but at some point this trend must be reversed. We are searching for the guest with the largest piece of pie, so we will look for the first instance of <span class="math inline">\(s_{i+1} - s_i\)</span> being negative. Because <span class="math inline">\(\prod_{j=0}^{i-1} \frac{100 - j}{100}\)</span> is always <span class="math inline">\(&gt; 0\)</span> this will occur when the term in parentheses becomes negative: <span class="math display">\[\begin{align}
+&amp;     &amp;\frac{i+1}{100}\cdot\frac{100 - i}{100} - \frac{i}{100} &amp;&lt; 0 \\
+&amp;\iff &amp;(i+1)(100-i) - 100\,i &amp;&lt; 0\\
+&amp;\iff &amp;100\,i -i² + 100 - i - 100\,i &amp;&lt; 0 \\
+&amp;\iff &amp;i² + i - 100 &amp;&gt; 0
+\end{align}\]</span></p>
+<p>This inequality holds true for all <span class="math inline">\(i \geq 10\)</span>. <strong>And thus the guest with the largest piece of pie is number <span class="math inline">\(10\)</span>.</strong></p>
+<p>With the help of R, we can also solve the puzzle rather more quickly by <em>brute force</em>. In keeping with our variable names from above:</p>
+<pre class="r"><code>i &lt;- 1:100                       # guest numbers
+p &lt;- i/100                       # percentages
+r &lt;- c(1, cumprod(1 - p))[i]     # rests before guests are served
+s &lt;- p * r                       # sizes of pieces of pie</code></pre>
+<p>First, we may check that the whole pie gets eaten:</p>
+<pre class="r"><code>all.equal(sum(s), 1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>And now we simply search for the index of the largest piece of pie:</p>
+<pre class="r"><code>imax &lt;- which.max(s)
+imax</code></pre>
+<pre><code>## [1] 10</code></pre>
+<p>Let’s wrap this up with a nice plot illustrating pieces of pie sizes:</p>
+<pre class="r"><code>library(tidyverse)
+l &lt;- list(Guest = i, Rest = r, Percentage = p, Size = s)
+df &lt;- as_tibble(l) %&gt;% 
+    mutate(gets_largest_piece = Guest == imax)
+ggplot(df, aes(x = Guest, y = Size)) +
+    geom_col(aes(fill = gets_largest_piece),
+             col = &quot;white&quot;, width = 1, show.legend = FALSE) +
+    xlim(0, 40) +
+    scale_y_continuous(&quot;Size in % of whole pie&quot;, labels = scales::percent) +
+    scale_fill_manual(values = c(&quot;lightgray&quot;, &quot;skyblue&quot;)) +
+    theme_bw()</code></pre>
+<p><img src="/post/2017-06-19-june-19th-guardian-puzzle_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Take-home message: Be among the first 30 guests or so in the queue because otherwise you’ll have to be content with barely some crumbs…</p>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I know I am writing this post at a time when the solution has already been published. But I haven’t had a look at the solution yet, promise! Gotta believe me here…<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
